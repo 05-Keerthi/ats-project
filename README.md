@@ -5,7 +5,6 @@ A premium, high-performance React.js frontend for the Job Portal Applicant Track
 ## 🚀 Features
 
 - **Premium Admin Hub**: High-level platform overview with animated KPI distribution charts
-- **Dual-Mode Management**: Switch between consolidated Overview and detailed User Directory
 - **ATS Workflow**: Full application lifecycle management from APPLIED to SELECTED/REJECTED
 - **Smart Interviewing**: Drag-and-drop slot selection for candidates with `react-datepicker`
 - **Visual Analytics**: Interactive bar charts for platform metrics powered by Framer Motion
