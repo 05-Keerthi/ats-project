@@ -1,0 +1,21 @@
+services:
+  applicant-tracking-system:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL}
+        - VITE_BASE_NAME=${VITE_BASE_NAME}
+        - NODE_ENV=${NODE_ENV:-production}
+    ports:
+      - "${PORT:-8081}:8081"
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/applicant-tracking-system/frontend/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
