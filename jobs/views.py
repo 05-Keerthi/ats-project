@@ -38,7 +38,16 @@ class CreateJobView(generics.CreateAPIView):
 class JobListView(generics.ListAPIView):
 
     serializer_class = JobSerializer
-    queryset = Job.objects.all()
+
+    def get_queryset(self):
+        user = self.request.user
+        if not user.is_authenticated:
+            return Job.objects.filter(status="ACTIVE")
+        if user.role == "ADMIN":
+            return Job.objects.all()
+        if user.role == "EMPLOYER":
+            return Job.objects.filter(created_by=user)
+        return Job.objects.filter(status="ACTIVE")
 
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
@@ -58,8 +67,13 @@ class JobListView(generics.ListAPIView):
 class UpdateJobView(generics.UpdateAPIView):
 
     serializer_class = JobSerializer
-    queryset = Job.objects.all()
     permission_classes = [IsEmployer]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated and user.role == "EMPLOYER":
+            return Job.objects.filter(created_by=user)
+        return Job.objects.none()
 
     def update(self, request, *args, **kwargs):
         response = super().update(request, *args, **kwargs)
@@ -78,8 +92,13 @@ class UpdateJobView(generics.UpdateAPIView):
 )
 class DeleteJobView(generics.DestroyAPIView):
 
-    queryset = Job.objects.all()
     permission_classes = [IsEmployer]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated and user.role == "EMPLOYER":
+            return Job.objects.filter(created_by=user)
+        return Job.objects.none()
 
     def destroy(self, request, *args, **kwargs):
 
@@ -98,8 +117,13 @@ class DeleteJobView(generics.DestroyAPIView):
 )
 class JobDetailView(generics.RetrieveAPIView):
 
-    queryset = Job.objects.all()
     serializer_class = JobSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated and user.role == "EMPLOYER":
+            return Job.objects.filter(created_by=user)
+        return Job.objects.filter(status="ACTIVE")
 
     def retrieve(self, request, *args, **kwargs):
 
