@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, User, Lock, Mail, Building } from 'lucide-react';
+import { ArrowLeft, User, Lock, Mail, Building, Eye, EyeOff } from 'lucide-react';
 import { authService } from '../../services/auth.service';
 import { toast } from 'sonner';
 
@@ -10,6 +10,7 @@ const SignUp = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -93,6 +94,7 @@ const SignUp = () => {
               />
             </div>
           </div>
+
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-1">Email</label>
             <div className="relative">
@@ -109,20 +111,35 @@ const SignUp = () => {
               />
             </div>
           </div>
+
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-1">Password</label>
             <div className="relative">
+
+              {/* Lock Icon */}
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
                 <Lock size={18} />
               </div>
+
+              {/* Password Input */}
               <input 
-                type="password" 
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full bg-slate-800/50 border border-slate-700 text-white rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all placeholder:text-slate-500"
+                className="w-full bg-slate-800/50 border border-slate-700 text-white rounded-lg pl-10 pr-10 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all placeholder:text-slate-500"
                 placeholder="••••••••"
               />
+
+              {/* Eye Toggle */}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-white"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+
             </div>
           </div>
 
